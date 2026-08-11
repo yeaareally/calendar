@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Notion Weekly Calendar Widget</title>
+  <title>Notion Calendar Widget</title>
   <!-- Google Fonts Dynamic Loader Container -->
   <link id="dynamicFontLink" rel="stylesheet" href="">
   <style>
@@ -57,8 +57,13 @@
       backdrop-filter: blur(10px);
       flex-shrink: 0; 
       z-index: 20;
+      gap: 10px;
+      flex-wrap: wrap;
     }
     .nav-btns { display: flex; gap: 8px; align-items: center; }
+    .view-toggle { display: flex; background: rgba(0, 0, 0, 0.05); border-radius: 6px; padding: 2px; border: 1px solid var(--border-color); }
+    .view-btn { border: none; background: transparent; padding: 4px 10px; font-size: 11px; border-radius: 4px; cursor: pointer; color: var(--text-color); }
+    .view-btn.active { background: white; font-weight: 600; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
     button { background: rgba(0, 0, 0, 0.05); color: var(--text-color); border: 1px solid var(--border-color); padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: 500; font-size: 12px; transition: all 0.2s; backdrop-filter: blur(4px); }
     button:hover { background: rgba(0, 0, 0, 0.1); border-color: rgba(0,0,0,0.2); }
     button.primary { background: var(--accent-color); border-color: var(--accent-color); color: white; }
@@ -170,21 +175,19 @@
       text-transform: uppercase;
       pointer-events: none;
     }
-
-    /* Scope Dialog */
-    .prompt-dialog { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 101; justify-content: center; align-items: center; }
-    .prompt-dialog.active { display: flex; }
-    .prompt-box { background: #ffffff; border: 1px solid var(--border-color); padding: 16px; border-radius: 8px; width: 300px; text-align: center; color: #1a1a1a; }
-    .prompt-box button { width: 100%; margin-top: 8px; }
   </style>
 </head>
 <body>
 
   <header>
     <div class="nav-btns">
-      <button id="prevWeekBtn">&lt;</button>
+      <button id="prevBtn">&lt;</button>
       <button id="todayBtn">Today</button>
-      <button id="nextWeekBtn">&gt;</button>
+      <button id="nextBtn">&gt;</button>
+      <div class="view-toggle">
+        <button class="view-btn active" id="weekViewBtn">Week</button>
+        <button class="view-btn" id="dayViewBtn">Day</button>
+      </div>
     </div>
     <div class="current-range" id="dateRangeDisplay">Aug 10 – Aug 16, 2026</div>
     <div style="display:flex; gap: 8px;">
@@ -364,29 +367,6 @@
             <label>Fallback Color</label>
             <input type="color" id="bgColor" value="#3b82f6" style="height:32px; padding:2px;">
           </div>
-          <div class="form-group">
-            <label>Recurrence</label>
-            <select id="repeatFreq">
-              <option value="NONE">Does not repeat</option>
-              <option value="DAILY">Daily</option>
-              <option value="WEEKLY">Weekly</option>
-              <option value="MONTHLY">Monthly</option>
-              <option value="YEARLY">Yearly</option>
-            </select>
-          </div>
-        </div>
-
-        <div id="weeklyOptions" style="display:none;" class="form-group">
-          <label>Repeat on</label>
-          <div class="weekday-checkboxes">
-            <label>M<input type="checkbox" name="weekDays" value="1"></label>
-            <label>T<input type="checkbox" name="weekDays" value="2"></label>
-            <label>W<input type="checkbox" name="weekDays" value="3"></label>
-            <label>T<input type="checkbox" name="weekDays" value="4"></label>
-            <label>F<input type="checkbox" name="weekDays" value="5"></label>
-            <label>S<input type="checkbox" name="weekDays" value="6"></label>
-            <label>S<input type="checkbox" name="weekDays" value="0"></label>
-          </div>
         </div>
 
         <div class="modal-actions">
@@ -400,17 +380,6 @@
     </div>
   </div>
 
-  <!-- Scope Dialog -->
-  <div class="prompt-dialog" id="scopeDialog">
-    <div class="prompt-box">
-      <h4 style="margin-bottom: 10px;">Edit Repeating Event</h4>
-      <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 12px;">Apply changes to:</p>
-      <button id="scopeThisOnly">This event only</button>
-      <button id="scopeAll">All events in series</button>
-      <button id="scopeCancel" style="background:transparent; border:none; color:var(--text-muted);">Cancel</button>
-    </div>
-  </div>
-
   <script>
     // Storage Helper
     const SafeStorage = {
@@ -420,6 +389,7 @@
 
     // State
     let currentDate = new Date();
+    let currentView = 'week'; // 'week' or 'day'
     let events = JSON.parse(SafeStorage.getItem('notion_calendar_events') || '[]');
     let calendarSettings = JSON.parse(SafeStorage.getItem('notion_calendar_settings') || '{"fontPreset":"system","customFont":"","type":"color","color":"#ffffff","url":"","opacity":65,"focalPoint":"center center","posX":50,"posY":50,"zoom":100}');
     
@@ -429,7 +399,7 @@
     let dragTargetCol = null;
     let activeDragBox = null;
 
-    const daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
     // DOM Elements
     const dayHeader = document.getElementById('dayHeader');
@@ -467,7 +437,6 @@
       }
     }
 
-    // Live Event Image Preview Updater
     function updateEventPreview() {
       const url = document.getElementById('imageUrl').value;
       const fit = document.getElementById('eventImgFit').value;
@@ -494,7 +463,6 @@
       }
     }
 
-    // Event listeners for Live Previews
     ['calendarBgUrl', 'bgFocalPoint', 'bgPosX', 'bgPosY', 'bgZoom'].forEach(id => {
       document.getElementById(id).addEventListener('input', () => { updateSliderLabels(); updateSettingsPreview(); });
       document.getElementById(id).addEventListener('change', () => { updateSliderLabels(); updateSettingsPreview(); });
@@ -544,7 +512,6 @@
       document.documentElement.style.setProperty('--grid-overlay-bg', `rgba(255, 255, 255, ${alpha})`);
     }
 
-    // Controls Initialization
     document.getElementById('settingsBtn').addEventListener('click', () => {
       document.getElementById('fontPreset').value = calendarSettings.fontPreset || 'system';
       document.getElementById('customFontName').value = calendarSettings.customFont || '';
@@ -628,7 +595,6 @@
       settingsModal.classList.remove('active');
     });
 
-    // Calendar Base Functions
     function initBaseGrid() {
       timeAxis.innerHTML = '';
       for (let h = 0; h < 24; h++) {
@@ -663,23 +629,33 @@
     }
 
     function render() {
-      const startOfWeek = getStartOfWeek(currentDate);
-      const endOfWeek = addDays(startOfWeek, 6);
-      dateRangeDisplay.innerText = `${startOfWeek.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} – ${endOfWeek.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`;
-
       dayHeader.innerHTML = '';
       allDayRow.innerHTML = '';
       daysGrid.innerHTML = '';
       const todayStr = formatDate(new Date());
 
-      for (let i = 0; i < 7; i++) {
-        const colDate = addDays(startOfWeek, i);
+      let daysToRender = [];
+
+      if (currentView === 'week') {
+        const startOfWeek = getStartOfWeek(currentDate);
+        const endOfWeek = addDays(startOfWeek, 6);
+        dateRangeDisplay.innerText = `${startOfWeek.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} – ${endOfWeek.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`;
+        
+        for (let i = 0; i < 7; i++) {
+          daysToRender.push(addDays(startOfWeek, i));
+        }
+      } else {
+        dateRangeDisplay.innerText = currentDate.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric', year: 'numeric' });
+        daysToRender.push(new Date(currentDate));
+      }
+
+      daysToRender.forEach(colDate => {
         const colDateStr = formatDate(colDate);
         const isToday = colDateStr === todayStr;
 
         const headerCell = document.createElement('div');
         headerCell.className = `day-column-header ${isToday ? 'today' : ''}`;
-        headerCell.innerHTML = `${daysOfWeek[i]} <span class="date-num">${colDate.getDate()}</span>`;
+        headerCell.innerHTML = `${daysOfWeek[colDate.getDay()]} <span class="date-num">${colDate.getDate()}</span>`;
         dayHeader.appendChild(headerCell);
 
         const allDayCell = document.createElement('div');
@@ -691,7 +667,6 @@
         dayCol.className = 'day-column';
         dayCol.dataset.date = colDateStr;
 
-        // Base Grid Hour Lines
         for (let h = 0; h < 24; h++) {
           const hourLine = document.createElement('div');
           hourLine.className = 'hour-line';
@@ -702,12 +677,10 @@
           dayCol.appendChild(hourLine);
         }
 
-        // Drag Selection Box Element
         const dragBox = document.createElement('div');
         dragBox.className = 'drag-selection-box';
         dayCol.appendChild(dragBox);
 
-        // Double Click + Drag Event Creation
         dayCol.addEventListener('dblclick', (e) => {
           if (e.target.closest('.event-card')) return;
           isDragging = true;
@@ -716,12 +689,10 @@
           
           const rect = dayCol.getBoundingClientRect();
           dragStartY = Math.max(0, e.clientY - rect.top);
-
-          // Snap to nearest 15 mins
           dragStartY = Math.floor(dragStartY / 15) * 15;
 
           activeDragBox.style.top = `${dragStartY}px`;
-          activeDragBox.style.height = `30px`; // Default 30 min preview height
+          activeDragBox.style.height = `30px`;
           activeDragBox.style.display = 'block';
         });
 
@@ -734,12 +705,11 @@
         }
 
         daysGrid.appendChild(dayCol);
-      }
+      });
 
       renderEvents();
     }
 
-    // Global Mousemove & Mouseup for Smooth Dragging
     window.addEventListener('mousemove', (e) => {
       if (!isDragging || !dragTargetCol || !activeDragBox) return;
 
@@ -749,8 +719,6 @@
 
       const topY = Math.min(dragStartY, currentY);
       const bottomY = Math.max(dragStartY, currentY);
-      
-      // Snap height in 15-min increments
       const snappedHeight = Math.max(15, Math.ceil((bottomY - topY) / 15) * 15);
 
       activeDragBox.style.top = `${topY}px`;
@@ -767,13 +735,11 @@
 
       const dateStr = dragTargetCol.dataset.date;
 
-      // Hide drag box
       activeDragBox.style.display = 'none';
       isDragging = false;
       dragTargetCol = null;
       activeDragBox = null;
 
-      // Open Modal with Dragged Time Range
       openModal({
         startDate: dateStr,
         startTime: minutesToTimeStr(startMin),
@@ -858,6 +824,8 @@
       document.getElementById('eventImgFit').value = data.eventImgFit || 'cover';
       document.getElementById('bgColor').value = data.bgColor || '#3b82f6';
 
+      document.getElementById('deleteBtn').style.display = data.id ? 'block' : 'none';
+
       updateEventPreview();
       eventModal.classList.add('active');
     }
@@ -887,11 +855,48 @@
       render();
     });
 
+    document.getElementById('deleteBtn').addEventListener('click', () => {
+      const id = document.getElementById('eventId').value;
+      if (id) {
+        events = events.filter(x => x.id !== id);
+        SafeStorage.setItem('notion_calendar_events', JSON.stringify(events));
+        eventModal.classList.remove('active');
+        render();
+      }
+    });
+
+    // View Navigation & Switching Controls
+    document.getElementById('weekViewBtn').addEventListener('click', () => {
+      currentView = 'week';
+      document.getElementById('weekViewBtn').classList.add('active');
+      document.getElementById('dayViewBtn').classList.remove('active');
+      render();
+    });
+
+    document.getElementById('dayViewBtn').addEventListener('click', () => {
+      currentView = 'day';
+      document.getElementById('dayViewBtn').classList.add('active');
+      document.getElementById('weekViewBtn').classList.remove('active');
+      render();
+    });
+
+    document.getElementById('prevBtn').addEventListener('click', () => { 
+      currentDate = addDays(currentDate, currentView === 'week' ? -7 : -1); 
+      render(); 
+    });
+
+    document.getElementById('nextBtn').addEventListener('click', () => { 
+      currentDate = addDays(currentDate, currentView === 'week' ? 7 : 1); 
+      render(); 
+    });
+
+    document.getElementById('todayBtn').addEventListener('click', () => { 
+      currentDate = new Date(); 
+      render(); 
+    });
+
     document.getElementById('cancelBtn').addEventListener('click', () => eventModal.classList.remove('active'));
     document.getElementById('newEventBtn').addEventListener('click', () => openModal());
-    document.getElementById('prevWeekBtn').addEventListener('click', () => { currentDate = addDays(currentDate, -7); render(); });
-    document.getElementById('nextWeekBtn').addEventListener('click', () => { currentDate = addDays(currentDate, 7); render(); });
-    document.getElementById('todayBtn').addEventListener('click', () => { currentDate = new Date(); render(); });
 
     // Startup
     applyCalendarSettings();
@@ -900,4 +905,3 @@
   </script>
 </body>
 </html>
-
