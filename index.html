@@ -4,8 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Notion Calendar Widget</title>
-  <!-- Google Fonts Dynamic Loader Container -->
-  <link id="dynamicFontLink" rel="stylesheet" href="">
   <style>
     :root {
       --bg-color: #ffffff;
@@ -138,8 +136,6 @@
     .form-group input, .form-group select, .form-group textarea { width: 100%; background: #f8f8f8; border: 1px solid var(--border-color); color: var(--text-color); padding: 6px 8px; border-radius: 4px; font-size: 12px; }
     .form-row { display: flex; gap: 8px; }
     .form-row .form-group { flex: 1; }
-    .weekday-checkboxes { display: flex; gap: 4px; justify-content: space-between; margin-top: 4px; }
-    .weekday-checkboxes label { font-size: 10px; display: flex; flex-direction: column; align-items: center; gap: 2px; }
     .modal-actions { display: flex; justify-content: space-between; margin-top: 16px; }
     .slider-val { float: right; font-weight: bold; color: var(--text-color); }
 
@@ -215,17 +211,12 @@
           <label>Font Family</label>
           <select id="fontPreset">
             <option value="system">Default Sans-Serif (System UI)</option>
+            <option value="'Helvetica Neue', Helvetica, Arial, sans-serif">Helvetica Neue</option>
             <option value="Georgia, serif">Classic Serif / Georgia</option>
             <option value="'Courier New', monospace">Minimal Monospace</option>
             <option value="'Playfair Display', serif">Playfair Display (Serif)</option>
             <option value="'Caveat', cursive">Handwriting / Cursive (Caveat)</option>
-            <option value="custom">Custom Google Font / Font Name</option>
           </select>
-        </div>
-
-        <div class="form-group" id="customFontWrapper" style="display:none;">
-          <label>Custom Font Name</label>
-          <input type="text" id="customFontName" placeholder="Enter font family name">
         </div>
 
         <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 12px 0;">
@@ -389,9 +380,9 @@
 
     // State
     let currentDate = new Date();
-    let currentView = 'week'; // 'week' or 'day'
+    let currentView = 'week';
     let events = JSON.parse(SafeStorage.getItem('notion_calendar_events') || '[]');
-    let calendarSettings = JSON.parse(SafeStorage.getItem('notion_calendar_settings') || '{"fontPreset":"system","customFont":"","type":"color","color":"#ffffff","url":"","opacity":65,"focalPoint":"center center","posX":50,"posY":50,"zoom":100}');
+    let calendarSettings = JSON.parse(SafeStorage.getItem('notion_calendar_settings') || '{"fontPreset":"system","type":"color","color":"#ffffff","url":"","opacity":65,"focalPoint":"center center","posX":50,"posY":50,"zoom":100}');
     
     // Drag state
     let isDragging = false;
@@ -481,13 +472,10 @@
     }
 
     function applyCalendarSettings() {
-      const { fontPreset, customFont, type, color, url, opacity, focalPoint, posX, posY, zoom } = calendarSettings;
+      const { fontPreset, type, color, url, opacity, focalPoint, posX, posY, zoom } = calendarSettings;
       let selectedFont = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
       
-      if (fontPreset === 'custom' && customFont) {
-        selectedFont = `'${customFont}', sans-serif`;
-        document.getElementById('dynamicFontLink').href = `https://fonts.googleapis.com/css2?family=${customFont.trim().replace(/ /g, '+')}:wght@300;400;600;700&display=swap`;
-      } else if (fontPreset && fontPreset !== 'system') {
+      if (fontPreset && fontPreset !== 'system') {
         selectedFont = fontPreset;
       }
 
@@ -514,7 +502,6 @@
 
     document.getElementById('settingsBtn').addEventListener('click', () => {
       document.getElementById('fontPreset').value = calendarSettings.fontPreset || 'system';
-      document.getElementById('customFontName').value = calendarSettings.customFont || '';
       document.getElementById('bgType').value = calendarSettings.type || 'color';
       document.getElementById('calendarBgColor').value = calendarSettings.color || '#ffffff';
       document.getElementById('calendarBgUrl').value = calendarSettings.url || '';
@@ -525,7 +512,6 @@
       document.getElementById('bgZoom').value = calendarSettings.zoom !== undefined ? calendarSettings.zoom : 100;
       
       updateSliderLabels();
-      toggleFontInputs();
       toggleSettingsBgInputs();
       toggleFocalInputs();
       updateSettingsPreview();
@@ -533,10 +519,6 @@
     });
 
     document.getElementById('closeSettingsBtn').addEventListener('click', () => settingsModal.classList.remove('active'));
-
-    function toggleFontInputs() {
-      document.getElementById('customFontWrapper').style.display = document.getElementById('fontPreset').value === 'custom' ? 'block' : 'none';
-    }
 
     function toggleSettingsBgInputs() {
       const type = document.getElementById('bgType').value;
@@ -548,7 +530,6 @@
       document.getElementById('customBgPositionGroup').style.display = document.getElementById('bgFocalPoint').value === 'custom' ? 'block' : 'none';
     }
 
-    document.getElementById('fontPreset').addEventListener('change', toggleFontInputs);
     document.getElementById('bgType').addEventListener('change', toggleSettingsBgInputs);
     document.getElementById('bgFocalPoint').addEventListener('change', toggleFocalInputs);
 
@@ -580,7 +561,6 @@
       e.preventDefault();
       calendarSettings = {
         fontPreset: document.getElementById('fontPreset').value,
-        customFont: document.getElementById('customFontName').value,
         type: document.getElementById('bgType').value,
         color: document.getElementById('calendarBgColor').value,
         url: document.getElementById('calendarBgUrl').value,
