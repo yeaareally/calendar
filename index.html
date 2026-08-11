@@ -11,7 +11,6 @@
       --border-color: rgba(0, 0, 0, 0.12);
       --text-color: #1a1a1a;
       --text-muted: #555555;
-      --accent-color: var(--text-color);
       --time-indicator: #ef4444;
       --grid-overlay-bg: rgba(255, 255, 255, 0.65);
       --hour-height: 60px;
@@ -69,17 +68,28 @@
       box-shadow: 0 1px 3px rgba(0,0,0,0.15); 
     }
 
-    button { background: rgba(0, 0, 0, 0.05); color: var(--text-color); border: 1px solid var(--border-color); padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: 500; font-size: 12px; transition: all 0.2s; backdrop-filter: blur(4px); }
+    button { 
+      background: rgba(0, 0, 0, 0.05); 
+      color: var(--text-color); 
+      border: 1px solid var(--border-color); 
+      padding: 6px 12px; 
+      border-radius: 6px; 
+      cursor: pointer; 
+      font-weight: 500; 
+      font-size: 12px; 
+      transition: all 0.2s; 
+      backdrop-filter: blur(4px); 
+    }
     button:hover { background: rgba(0, 0, 0, 0.1); border-color: rgba(0,0,0,0.2); }
     
-    /* Dynamic Inverted Primary Button (+ Event) */
-    button.primary { 
+    /* Dynamic Primary Button (+ Event) */
+    button.primary, #newEventBtn { 
       background-color: var(--text-color) !important; 
       border-color: var(--text-color) !important; 
       color: #ffffff !important; 
     }
-    button.primary:hover { 
-      opacity: 0.9;
+    button.primary:hover, #newEventBtn:hover { 
+      opacity: 0.88;
     }
 
     .current-range { font-weight: 600; font-size: 14px; text-shadow: none; color: var(--text-color); }
@@ -107,17 +117,27 @@
     .day-header { display: flex; border-bottom: 1px solid var(--border-color); background: rgba(255, 255, 255, 0.85); position: sticky; top: 0; z-index: 10; margin-left: 60px; backdrop-filter: blur(8px); }
     .day-column-header { flex: 1; text-align: center; padding: 8px 0; border-right: 1px solid var(--border-color); font-weight: 600; text-transform: uppercase; font-size: 11px; color: var(--text-color); opacity: 0.8; }
     
-    /* Dynamic Today Header & Date Badge */
-    .day-column-header.today { color: var(--text-color); opacity: 1; }
-    .day-column-header .date-num { font-size: 16px; display: block; color: var(--text-color); margin-top: 2px; }
+    /* Dynamic Today Header Text & Badge Circle */
+    .day-column-header.today { 
+      color: var(--text-color) !important; 
+      opacity: 1 !important; 
+      font-weight: 700 !important;
+    }
+    .day-column-header .date-num { 
+      font-size: 16px; 
+      display: block; 
+      color: var(--text-color); 
+      margin-top: 2px; 
+    }
     .day-column-header.today .date-num { 
-      background-color: var(--text-color); 
-      color: #ffffff; 
+      background-color: var(--text-color) !important; 
+      color: #ffffff !important; 
       border-radius: 50%; 
-      width: 24px; 
-      height: 24px; 
-      line-height: 24px; 
+      width: 26px; 
+      height: 26px; 
+      line-height: 26px; 
       margin: 2px auto 0 auto; 
+      display: inline-block;
     }
 
     /* All Day Banner Row */
@@ -139,7 +159,7 @@
       position: absolute;
       left: 2px;
       right: 2px;
-      background: rgba(59, 130, 246, 0.35);
+      background: rgba(0, 0, 0, 0.15);
       border: 1.5px dashed var(--text-color);
       border-radius: 4px;
       pointer-events: none;
@@ -672,6 +692,7 @@
       SafeStorage.setItem('notion_calendar_settings', JSON.stringify(calendarSettings));
       applyCalendarSettings();
       settingsModal.classList.remove('active');
+      render();
     });
 
     function initBaseGrid() {
