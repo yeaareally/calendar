@@ -125,12 +125,11 @@
     .current-time-line { position: absolute; left: 0; right: 0; height: 2px; background-color: var(--time-indicator); z-index: 8; pointer-events: none; }
     .current-time-line::before { content: ''; position: absolute; left: -4px; top: -3px; width: 8px; height: 8px; background-color: var(--time-indicator); border-radius: 50%; }
 
-    /* Event Cards */
-    .event-card { position: absolute; border-radius: 4px; overflow: hidden; font-size: 11px; padding: 4px 6px; cursor: pointer; border: 1px solid rgba(255,255,255,0.2); box-shadow: 0 2px 6px rgba(0,0,0,0.15); transition: transform 0.1s, box-shadow 0.1s; background-size: cover; background-position: center; color: white; z-index: 2; }
-    .event-card:hover { transform: scale(1.02); z-index: 7 !important; box-shadow: 0 4px 12px rgba(0,0,0,0.25); }
-    .event-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.7) 100%); z-index: 1; }
-    .event-content { position: relative; z-index: 2; height: 100%; display: flex; flex-direction: column; justify-content: space-between; word-break: break-word; color: white; }
-    .event-title { font-weight: 600; line-height: 1.2; text-shadow: 0 1px 2px rgba(0,0,0,0.6); }
+    /* Event Cards - Dark Overlay Removed */
+    .event-card { position: absolute; border-radius: 4px; overflow: hidden; font-size: 11px; padding: 4px 6px; cursor: pointer; border: 1px solid rgba(0,0,0,0.1); box-shadow: 0 2px 6px rgba(0,0,0,0.1); transition: transform 0.1s, box-shadow 0.1s; background-size: cover; background-position: center; color: var(--text-color); z-index: 2; }
+    .event-card:hover { transform: scale(1.02); z-index: 7 !important; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+    .event-content { position: relative; z-index: 2; height: 100%; display: flex; flex-direction: column; justify-content: space-between; word-break: break-word; color: inherit; }
+    .event-title { font-weight: 600; line-height: 1.2; }
     .event-time { font-size: 9.5px; opacity: 0.85; margin-top: 2px; }
 
     /* Modals */
@@ -401,10 +400,15 @@
           </select>
         </div>
 
+        <!-- Event Color Settings (Card Color & Text Color) -->
         <div class="form-row">
           <div class="form-group">
-            <label>Fallback Color</label>
+            <label>Event Color</label>
             <input type="color" id="bgColor" value="#3b82f6" style="height:32px; padding:2px;">
+          </div>
+          <div class="form-group">
+            <label>Event Text Color</label>
+            <input type="color" id="eventTextColor" value="#ffffff" style="height:32px; padding:2px;">
           </div>
         </div>
 
@@ -814,6 +818,11 @@
             card.className = 'event-card';
             card.style.backgroundColor = evt.bgColor || '#3b82f6';
             
+            // Custom text color per event
+            if (evt.eventTextColor) {
+              card.style.color = evt.eventTextColor;
+            }
+
             if (evt.imageUrl) {
               card.style.backgroundImage = `url('${evt.imageUrl}')`;
               const fit = evt.eventImgFit || 'cover';
@@ -828,9 +837,6 @@
                 card.style.backgroundPosition = 'center center';
               }
             }
-
-            const overlay = document.createElement('div');
-            overlay.className = 'event-overlay';
 
             const content = document.createElement('div');
             content.className = 'event-content';
@@ -858,7 +864,6 @@
               card.style.right = '4px';
             }
 
-            card.appendChild(overlay);
             card.appendChild(content);
 
             card.addEventListener('click', (e) => {
@@ -882,6 +887,7 @@
       document.getElementById('imageUrl').value = data.imageUrl || '';
       document.getElementById('eventImgFit').value = data.eventImgFit || 'cover';
       document.getElementById('bgColor').value = data.bgColor || '#3b82f6';
+      document.getElementById('eventTextColor').value = data.eventTextColor || '#ffffff';
 
       const isRec = !!data.isRecurring;
       document.getElementById('isRecurring').checked = isRec;
@@ -918,6 +924,7 @@
         imageUrl: document.getElementById('imageUrl').value,
         eventImgFit: document.getElementById('eventImgFit').value,
         bgColor: document.getElementById('bgColor').value,
+        eventTextColor: document.getElementById('eventTextColor').value,
         isRecurring: document.getElementById('isRecurring').checked,
         repeatDays: selectedDays,
         untilDate: document.getElementById('untilDate').value
