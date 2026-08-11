@@ -11,8 +11,7 @@
       --border-color: rgba(0, 0, 0, 0.12);
       --text-color: #1a1a1a;
       --text-muted: #555555;
-      --accent-color: #3b82f6;
-      --accent-hover: #2563eb;
+      --accent-color: var(--text-color);
       --time-indicator: #ef4444;
       --grid-overlay-bg: rgba(255, 255, 255, 0.65);
       --hour-height: 60px;
@@ -62,7 +61,7 @@
     .view-toggle { display: flex; background: rgba(0, 0, 0, 0.05); border-radius: 6px; padding: 2px; border: 1px solid var(--border-color); }
     .view-btn { border: none; background: transparent; padding: 4px 10px; font-size: 11px; border-radius: 4px; cursor: pointer; color: var(--text-color); transition: all 0.2s ease; }
     
-    /* Inverted Active Toggle Style */
+    /* Inverted Active View Toggle */
     .view-btn.active { 
       background-color: var(--text-color) !important; 
       color: #ffffff !important; 
@@ -72,8 +71,17 @@
 
     button { background: rgba(0, 0, 0, 0.05); color: var(--text-color); border: 1px solid var(--border-color); padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: 500; font-size: 12px; transition: all 0.2s; backdrop-filter: blur(4px); }
     button:hover { background: rgba(0, 0, 0, 0.1); border-color: rgba(0,0,0,0.2); }
-    button.primary { background: var(--accent-color); border-color: var(--accent-color); color: white; }
-    button.primary:hover { background: var(--accent-hover); }
+    
+    /* Dynamic Inverted Primary Button (+ Event) */
+    button.primary { 
+      background-color: var(--text-color) !important; 
+      border-color: var(--text-color) !important; 
+      color: #ffffff !important; 
+    }
+    button.primary:hover { 
+      opacity: 0.9;
+    }
+
     .current-range { font-weight: 600; font-size: 14px; text-shadow: none; color: var(--text-color); }
 
     /* Icon Only Settings Button */
@@ -98,9 +106,19 @@
     /* Sticky Day Header */
     .day-header { display: flex; border-bottom: 1px solid var(--border-color); background: rgba(255, 255, 255, 0.85); position: sticky; top: 0; z-index: 10; margin-left: 60px; backdrop-filter: blur(8px); }
     .day-column-header { flex: 1; text-align: center; padding: 8px 0; border-right: 1px solid var(--border-color); font-weight: 600; text-transform: uppercase; font-size: 11px; color: var(--text-color); opacity: 0.8; }
-    .day-column-header.today { color: var(--accent-color); opacity: 1; }
+    
+    /* Dynamic Today Header & Date Badge */
+    .day-column-header.today { color: var(--text-color); opacity: 1; }
     .day-column-header .date-num { font-size: 16px; display: block; color: var(--text-color); margin-top: 2px; }
-    .day-column-header.today .date-num { background: var(--accent-color); color: white; border-radius: 50%; width: 24px; height: 24px; line-height: 24px; margin: 2px auto 0 auto; }
+    .day-column-header.today .date-num { 
+      background-color: var(--text-color); 
+      color: #ffffff; 
+      border-radius: 50%; 
+      width: 24px; 
+      height: 24px; 
+      line-height: 24px; 
+      margin: 2px auto 0 auto; 
+    }
 
     /* All Day Banner Row */
     .all-day-row { display: flex; border-bottom: 2px solid var(--border-color); background: rgba(255, 255, 255, 0.6); min-height: 36px; margin-left: 60px; position: sticky; top: 49px; z-index: 9; }
@@ -122,7 +140,7 @@
       left: 2px;
       right: 2px;
       background: rgba(59, 130, 246, 0.35);
-      border: 1.5px dashed var(--accent-color);
+      border: 1.5px dashed var(--text-color);
       border-radius: 4px;
       pointer-events: none;
       z-index: 15;
@@ -159,7 +177,7 @@
     .day-checkbox { flex: 1; text-align: center; }
     .day-checkbox input { display: none; }
     .day-checkbox span { display: block; padding: 6px 0; background: #f1f5f9; border: 1px solid var(--border-color); border-radius: 4px; font-size: 11px; cursor: pointer; font-weight: 600; color: #555555; }
-    .day-checkbox input:checked + span { background: var(--accent-color); color: white; border-color: var(--accent-color); }
+    .day-checkbox input:checked + span { background: var(--text-color); color: white; border-color: var(--text-color); }
 
     /* Image Preview Boxes */
     .preview-box {
