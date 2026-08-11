@@ -61,12 +61,19 @@
     .nav-btns { display: flex; gap: 8px; align-items: center; }
     .view-toggle { display: flex; background: rgba(0, 0, 0, 0.05); border-radius: 6px; padding: 2px; border: 1px solid var(--border-color); }
     .view-btn { border: none; background: transparent; padding: 4px 10px; font-size: 11px; border-radius: 4px; cursor: pointer; color: var(--text-color); }
-    .view-btn.active { background: white; font-weight: 600; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    .view-btn.active { background: white; color: #1a1a1a; font-weight: 600; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
     button { background: rgba(0, 0, 0, 0.05); color: var(--text-color); border: 1px solid var(--border-color); padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: 500; font-size: 12px; transition: all 0.2s; backdrop-filter: blur(4px); }
     button:hover { background: rgba(0, 0, 0, 0.1); border-color: rgba(0,0,0,0.2); }
     button.primary { background: var(--accent-color); border-color: var(--accent-color); color: white; }
     button.primary:hover { background: var(--accent-hover); }
-    .current-range { font-weight: 600; font-size: 14px; text-shadow: none; }
+    .current-range { font-weight: 600; font-size: 14px; text-shadow: none; color: var(--text-color); }
+
+    /* Icon Only Settings Button */
+    #settingsBtn {
+      padding: 6px 10px;
+      font-size: 14px;
+      line-height: 1;
+    }
 
     /* Calendar Grid Container */
     .calendar-container { 
@@ -82,8 +89,8 @@
 
     /* Sticky Day Header */
     .day-header { display: flex; border-bottom: 1px solid var(--border-color); background: rgba(255, 255, 255, 0.85); position: sticky; top: 0; z-index: 10; margin-left: 60px; backdrop-filter: blur(8px); }
-    .day-column-header { flex: 1; text-align: center; padding: 8px 0; border-right: 1px solid var(--border-color); font-weight: 600; text-transform: uppercase; font-size: 11px; color: var(--text-muted); }
-    .day-column-header.today { color: var(--accent-color); }
+    .day-column-header { flex: 1; text-align: center; padding: 8px 0; border-right: 1px solid var(--border-color); font-weight: 600; text-transform: uppercase; font-size: 11px; color: var(--text-color); opacity: 0.8; }
+    .day-column-header.today { color: var(--accent-color); opacity: 1; }
     .day-column-header .date-num { font-size: 16px; display: block; color: var(--text-color); margin-top: 2px; }
     .day-column-header.today .date-num { background: var(--accent-color); color: white; border-radius: 50%; width: 24px; height: 24px; line-height: 24px; margin: 2px auto 0 auto; }
 
@@ -94,7 +101,7 @@
     /* Main Grid Body */
     .grid-body { display: flex; position: relative; flex: 1; min-height: 1440px; }
     .time-axis { width: 60px; flex-shrink: 0; border-right: 1px solid var(--border-color); background: rgba(255, 255, 255, 0.7); z-index: 5; }
-    .hour-label { height: var(--hour-height); text-align: right; padding-right: 8px; font-size: 10px; color: var(--text-muted); transform: translateY(-6px); text-shadow: none; }
+    .hour-label { height: var(--hour-height); text-align: right; padding-right: 8px; font-size: 10px; color: var(--text-color); opacity: 0.75; transform: translateY(-6px); text-shadow: none; }
     
     .days-grid { flex: 1; display: flex; position: relative; }
     .day-column { flex: 1; border-right: 1px solid var(--border-color); position: relative; height: 100%; cursor: crosshair; }
@@ -122,27 +129,34 @@
     .event-card { position: absolute; border-radius: 4px; overflow: hidden; font-size: 11px; padding: 4px 6px; cursor: pointer; border: 1px solid rgba(255,255,255,0.2); box-shadow: 0 2px 6px rgba(0,0,0,0.15); transition: transform 0.1s, box-shadow 0.1s; background-size: cover; background-position: center; color: white; z-index: 2; }
     .event-card:hover { transform: scale(1.02); z-index: 7 !important; box-shadow: 0 4px 12px rgba(0,0,0,0.25); }
     .event-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.7) 100%); z-index: 1; }
-    .event-content { position: relative; z-index: 2; height: 100%; display: flex; flex-direction: column; justify-content: space-between; word-break: break-word; }
+    .event-content { position: relative; z-index: 2; height: 100%; display: flex; flex-direction: column; justify-content: space-between; word-break: break-word; color: white; }
     .event-title { font-weight: 600; line-height: 1.2; text-shadow: 0 1px 2px rgba(0,0,0,0.6); }
     .event-time { font-size: 9.5px; opacity: 0.85; margin-top: 2px; }
 
     /* Modals */
     .modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.4); display: none; justify-content: center; align-items: center; z-index: 100; backdrop-filter: blur(4px); }
     .modal-backdrop.active { display: flex; }
-    .modal { background: #ffffff; border: 1px solid var(--border-color); border-radius: 8px; width: 420px; max-width: 90%; padding: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); max-height: 90vh; overflow-y: auto; color: #1a1a1a; }
+    .modal { background: #ffffff; border: 1px solid var(--border-color); border-radius: 8px; width: 440px; max-width: 90%; padding: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); max-height: 90vh; overflow-y: auto; color: #1a1a1a; }
     .modal h3 { margin-bottom: 12px; font-size: 15px; }
     .form-group { margin-bottom: 10px; }
-    .form-group label { display: block; font-size: 11px; color: var(--text-muted); margin-bottom: 4px; }
-    .form-group input, .form-group select, .form-group textarea { width: 100%; background: #f8f8f8; border: 1px solid var(--border-color); color: var(--text-color); padding: 6px 8px; border-radius: 4px; font-size: 12px; }
+    .form-group label { display: block; font-size: 11px; color: #555555; margin-bottom: 4px; }
+    .form-group input, .form-group select, .form-group textarea { width: 100%; background: #f8f8f8; border: 1px solid var(--border-color); color: #1a1a1a; padding: 6px 8px; border-radius: 4px; font-size: 12px; }
     .form-row { display: flex; gap: 8px; }
     .form-row .form-group { flex: 1; }
     .modal-actions { display: flex; justify-content: space-between; margin-top: 16px; }
-    .slider-val { float: right; font-weight: bold; color: var(--text-color); }
+    .slider-val { float: right; font-weight: bold; color: #1a1a1a; }
+
+    /* Repeat Day Selector Styling */
+    .day-selector { display: flex; gap: 4px; margin-top: 4px; }
+    .day-checkbox { flex: 1; text-align: center; }
+    .day-checkbox input { display: none; }
+    .day-checkbox span { display: block; padding: 6px 0; background: #f1f5f9; border: 1px solid var(--border-color); border-radius: 4px; font-size: 11px; cursor: pointer; font-weight: 600; color: #555555; }
+    .day-checkbox input:checked + span { background: var(--accent-color); color: white; border-color: var(--accent-color); }
 
     /* Image Preview Boxes */
     .preview-box {
       width: 100%;
-      height: 120px;
+      height: 100px;
       border: 2px dashed var(--border-color);
       border-radius: 6px;
       margin: 8px 0;
@@ -186,8 +200,8 @@
       </div>
     </div>
     <div class="current-range" id="dateRangeDisplay">Aug 10 – Aug 16, 2026</div>
-    <div style="display:flex; gap: 8px;">
-      <button id="settingsBtn">⚙️ Customize</button>
+    <div style="display:flex; gap: 8px; align-items: center;">
+      <button id="settingsBtn" title="Customize Calendar">⚙️</button>
       <button class="primary" id="newEventBtn">+ Event</button>
     </div>
   </header>
@@ -207,16 +221,23 @@
       <h3>Calendar Customization</h3>
       <form id="settingsForm">
         
-        <div class="form-group">
-          <label>Font Family</label>
-          <select id="fontPreset">
-            <option value="system">Default Sans-Serif (System UI)</option>
-            <option value="'Helvetica Neue', Helvetica, Arial, sans-serif">Helvetica Neue</option>
-            <option value="Georgia, serif">Classic Serif / Georgia</option>
-            <option value="'Courier New', monospace">Minimal Monospace</option>
-            <option value="'Playfair Display', serif">Playfair Display (Serif)</option>
-            <option value="'Caveat', cursive">Handwriting / Cursive (Caveat)</option>
-          </select>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Font Family</label>
+            <select id="fontPreset">
+              <option value="system">Default Sans-Serif (System UI)</option>
+              <option value="'Helvetica Neue', Helvetica, Arial, sans-serif">Helvetica Neue</option>
+              <option value="Georgia, serif">Classic Serif / Georgia</option>
+              <option value="'Courier New', monospace">Minimal Monospace</option>
+              <option value="'Playfair Display', serif">Playfair Display (Serif)</option>
+              <option value="'Caveat', cursive">Handwriting / Cursive (Caveat)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Calendar Text Color</label>
+            <input type="color" id="calendarTextColor" value="#1a1a1a" style="height:34px; padding:2px;">
+          </div>
         </div>
 
         <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 12px 0;">
@@ -317,7 +338,7 @@
         </div>
         <div class="form-row">
           <div class="form-group">
-            <label>Date</label>
+            <label>Start Date</label>
             <input type="date" id="startDate" required>
           </div>
           <div class="form-group time-input">
@@ -327,6 +348,33 @@
           <div class="form-group time-input">
             <label>End</label>
             <input type="time" id="endTime" value="10:00">
+          </div>
+        </div>
+
+        <!-- Recurrence Control -->
+        <div style="background: #f8fafc; padding: 10px; border-radius: 6px; margin: 10px 0; border: 1px solid var(--border-color);">
+          <div class="form-group" style="margin-bottom: 6px;">
+            <label><input type="checkbox" id="isRecurring"> Repeat Event</label>
+          </div>
+
+          <div id="repeatOptionsGroup" style="display: none;">
+            <div class="form-group">
+              <label>Repeat On Days</label>
+              <div class="day-selector">
+                <label class="day-checkbox"><input type="checkbox" name="repeatDay" value="0"><span>S</span></label>
+                <label class="day-checkbox"><input type="checkbox" name="repeatDay" value="1"><span>M</span></label>
+                <label class="day-checkbox"><input type="checkbox" name="repeatDay" value="2"><span>T</span></label>
+                <label class="day-checkbox"><input type="checkbox" name="repeatDay" value="3"><span>W</span></label>
+                <label class="day-checkbox"><input type="checkbox" name="repeatDay" value="4"><span>T</span></label>
+                <label class="day-checkbox"><input type="checkbox" name="repeatDay" value="5"><span>F</span></label>
+                <label class="day-checkbox"><input type="checkbox" name="repeatDay" value="6"><span>S</span></label>
+              </div>
+            </div>
+
+            <div class="form-group" style="margin-top: 8px;">
+              <label>Repeat Until Date</label>
+              <input type="date" id="untilDate">
+            </div>
           </div>
         </div>
 
@@ -382,7 +430,7 @@
     let currentDate = new Date();
     let currentView = 'week';
     let events = JSON.parse(SafeStorage.getItem('notion_calendar_events') || '[]');
-    let calendarSettings = JSON.parse(SafeStorage.getItem('notion_calendar_settings') || '{"fontPreset":"system","type":"color","color":"#ffffff","url":"","opacity":65,"focalPoint":"center center","posX":50,"posY":50,"zoom":100}');
+    let calendarSettings = JSON.parse(SafeStorage.getItem('notion_calendar_settings') || '{"fontPreset":"system","textColor":"#1a1a1a","type":"color","color":"#ffffff","url":"","opacity":65,"focalPoint":"center center","posX":50,"posY":50,"zoom":100}');
     
     // Drag state
     let isDragging = false;
@@ -400,6 +448,11 @@
     const dateRangeDisplay = document.getElementById('dateRangeDisplay');
     const eventModal = document.getElementById('eventModal');
     const settingsModal = document.getElementById('settingsModal');
+
+    // Recurrence Checkbox UI Toggle
+    document.getElementById('isRecurring').addEventListener('change', (e) => {
+      document.getElementById('repeatOptionsGroup').style.display = e.target.checked ? 'block' : 'none';
+    });
 
     // Live Settings Preview Updater
     function updateSettingsPreview() {
@@ -472,7 +525,7 @@
     }
 
     function applyCalendarSettings() {
-      const { fontPreset, type, color, url, opacity, focalPoint, posX, posY, zoom } = calendarSettings;
+      const { fontPreset, textColor, type, color, url, opacity, focalPoint, posX, posY, zoom } = calendarSettings;
       let selectedFont = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
       
       if (fontPreset && fontPreset !== 'system') {
@@ -480,6 +533,7 @@
       }
 
       document.documentElement.style.setProperty('--calendar-font', selectedFont);
+      document.documentElement.style.setProperty('--text-color', textColor || '#1a1a1a');
 
       if (type === 'image' && url) {
         document.body.style.backgroundImage = `url('${url}')`;
@@ -502,6 +556,7 @@
 
     document.getElementById('settingsBtn').addEventListener('click', () => {
       document.getElementById('fontPreset').value = calendarSettings.fontPreset || 'system';
+      document.getElementById('calendarTextColor').value = calendarSettings.textColor || '#1a1a1a';
       document.getElementById('bgType').value = calendarSettings.type || 'color';
       document.getElementById('calendarBgColor').value = calendarSettings.color || '#ffffff';
       document.getElementById('calendarBgUrl').value = calendarSettings.url || '';
@@ -561,6 +616,7 @@
       e.preventDefault();
       calendarSettings = {
         fontPreset: document.getElementById('fontPreset').value,
+        textColor: document.getElementById('calendarTextColor').value,
         type: document.getElementById('bgType').value,
         color: document.getElementById('calendarBgColor').value,
         url: document.getElementById('calendarBgUrl').value,
@@ -730,66 +786,89 @@
 
     function renderEvents() {
       events.forEach(evt => {
-        const col = daysGrid.querySelector(`[data-date="${evt.startDate}"]`);
-        if (!col) return;
-
-        const card = document.createElement('div');
-        card.className = 'event-card';
-        card.style.backgroundColor = evt.bgColor || '#3b82f6';
+        const columns = Array.from(daysGrid.querySelectorAll('.day-column'));
         
-        if (evt.imageUrl) {
-          card.style.backgroundImage = `url('${evt.imageUrl}')`;
-          const fit = evt.eventImgFit || 'cover';
-          if (fit === 'top') {
-            card.style.backgroundPosition = 'center top';
-            card.style.backgroundSize = 'cover';
-          } else if (fit === 'bottom') {
-            card.style.backgroundPosition = 'center bottom';
-            card.style.backgroundSize = 'cover';
+        columns.forEach(col => {
+          const colDateStr = col.dataset.date;
+          const colDate = new Date(colDateStr + 'T00:00:00');
+          let shouldRender = false;
+
+          if (evt.isRecurring) {
+            const startDate = new Date(evt.startDate + 'T00:00:00');
+            const untilDate = evt.untilDate ? new Date(evt.untilDate + 'T23:59:59') : null;
+
+            if (colDate >= startDate && (!untilDate || colDate <= untilDate)) {
+              const dayOfWeek = colDate.getDay();
+              if (evt.repeatDays && evt.repeatDays.includes(dayOfWeek)) {
+                shouldRender = true;
+              }
+            }
           } else {
-            card.style.backgroundSize = fit;
-            card.style.backgroundPosition = 'center center';
+            if (colDateStr === evt.startDate) {
+              shouldRender = true;
+            }
           }
-        }
 
-        const overlay = document.createElement('div');
-        overlay.className = 'event-overlay';
+          if (shouldRender) {
+            const card = document.createElement('div');
+            card.className = 'event-card';
+            card.style.backgroundColor = evt.bgColor || '#3b82f6';
+            
+            if (evt.imageUrl) {
+              card.style.backgroundImage = `url('${evt.imageUrl}')`;
+              const fit = evt.eventImgFit || 'cover';
+              if (fit === 'top') {
+                card.style.backgroundPosition = 'center top';
+                card.style.backgroundSize = 'cover';
+              } else if (fit === 'bottom') {
+                card.style.backgroundPosition = 'center bottom';
+                card.style.backgroundSize = 'cover';
+              } else {
+                card.style.backgroundSize = fit;
+                card.style.backgroundPosition = 'center center';
+              }
+            }
 
-        const content = document.createElement('div');
-        content.className = 'event-content';
-        
-        const title = document.createElement('div');
-        title.className = 'event-title';
-        title.innerText = evt.title;
-        content.appendChild(title);
+            const overlay = document.createElement('div');
+            overlay.className = 'event-overlay';
 
-        if (!evt.isAllDay && evt.startTime && evt.endTime) {
-          const time = document.createElement('div');
-          time.className = 'event-time';
-          time.innerText = `${evt.startTime} - ${evt.endTime}`;
-          content.appendChild(time);
+            const content = document.createElement('div');
+            content.className = 'event-content';
+            
+            const title = document.createElement('div');
+            title.className = 'event-title';
+            title.innerText = evt.title;
+            content.appendChild(title);
 
-          const [sH, sM] = evt.startTime.split(':').map(Number);
-          const [eH, eM] = evt.endTime.split(':').map(Number);
-          const startMin = sH * 60 + sM;
-          const endMin = eH * 60 + eM;
-          const duration = Math.max(15, endMin - startMin);
+            if (!evt.isAllDay && evt.startTime && evt.endTime) {
+              const time = document.createElement('div');
+              time.className = 'event-time';
+              time.innerText = `${evt.startTime} - ${evt.endTime}`;
+              content.appendChild(time);
 
-          card.style.top = `${startMin}px`;
-          card.style.height = `${duration}px`;
-          card.style.left = '4px';
-          card.style.right = '4px';
-        }
+              const [sH, sM] = evt.startTime.split(':').map(Number);
+              const [eH, eM] = evt.endTime.split(':').map(Number);
+              const startMin = sH * 60 + sM;
+              const endMin = eH * 60 + eM;
+              const duration = Math.max(15, endMin - startMin);
 
-        card.appendChild(overlay);
-        card.appendChild(content);
+              card.style.top = `${startMin}px`;
+              card.style.height = `${duration}px`;
+              card.style.left = '4px';
+              card.style.right = '4px';
+            }
 
-        card.addEventListener('click', (e) => {
-          e.stopPropagation();
-          openModal(evt);
+            card.appendChild(overlay);
+            card.appendChild(content);
+
+            card.addEventListener('click', (e) => {
+              e.stopPropagation();
+              openModal(evt);
+            });
+
+            col.appendChild(card);
+          }
         });
-
-        col.appendChild(card);
       });
     }
 
@@ -804,6 +883,16 @@
       document.getElementById('eventImgFit').value = data.eventImgFit || 'cover';
       document.getElementById('bgColor').value = data.bgColor || '#3b82f6';
 
+      const isRec = !!data.isRecurring;
+      document.getElementById('isRecurring').checked = isRec;
+      document.getElementById('repeatOptionsGroup').style.display = isRec ? 'block' : 'none';
+      document.getElementById('untilDate').value = data.untilDate || '';
+
+      const repeatDays = data.repeatDays || [];
+      document.querySelectorAll('input[name="repeatDay"]').forEach(cb => {
+        cb.checked = repeatDays.includes(parseInt(cb.value, 10));
+      });
+
       document.getElementById('deleteBtn').style.display = data.id ? 'block' : 'none';
 
       updateEventPreview();
@@ -814,6 +903,11 @@
       e.preventDefault();
       const id = document.getElementById('eventId').value || 'evt_' + Date.now();
 
+      const selectedDays = [];
+      document.querySelectorAll('input[name="repeatDay"]:checked').forEach(cb => {
+        selectedDays.push(parseInt(cb.value, 10));
+      });
+
       const evtData = {
         id,
         title: document.getElementById('title').value,
@@ -823,7 +917,10 @@
         endTime: document.getElementById('endTime').value,
         imageUrl: document.getElementById('imageUrl').value,
         eventImgFit: document.getElementById('eventImgFit').value,
-        bgColor: document.getElementById('bgColor').value
+        bgColor: document.getElementById('bgColor').value,
+        isRecurring: document.getElementById('isRecurring').checked,
+        repeatDays: selectedDays,
+        untilDate: document.getElementById('untilDate').value
       };
 
       const existingIdx = events.findIndex(x => x.id === id);
