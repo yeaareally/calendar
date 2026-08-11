@@ -60,8 +60,16 @@
     }
     .nav-btns { display: flex; gap: 8px; align-items: center; }
     .view-toggle { display: flex; background: rgba(0, 0, 0, 0.05); border-radius: 6px; padding: 2px; border: 1px solid var(--border-color); }
-    .view-btn { border: none; background: transparent; padding: 4px 10px; font-size: 11px; border-radius: 4px; cursor: pointer; color: var(--text-color); }
-    .view-btn.active { background: white; color: #1a1a1a; font-weight: 600; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    .view-btn { border: none; background: transparent; padding: 4px 10px; font-size: 11px; border-radius: 4px; cursor: pointer; color: var(--text-color); transition: all 0.2s ease; }
+    
+    /* Inverted Active Toggle Style */
+    .view-btn.active { 
+      background-color: var(--text-color) !important; 
+      color: #ffffff !important; 
+      font-weight: 600; 
+      box-shadow: 0 1px 3px rgba(0,0,0,0.15); 
+    }
+
     button { background: rgba(0, 0, 0, 0.05); color: var(--text-color); border: 1px solid var(--border-color); padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: 500; font-size: 12px; transition: all 0.2s; backdrop-filter: blur(4px); }
     button:hover { background: rgba(0, 0, 0, 0.1); border-color: rgba(0,0,0,0.2); }
     button.primary { background: var(--accent-color); border-color: var(--accent-color); color: white; }
@@ -125,12 +133,13 @@
     .current-time-line { position: absolute; left: 0; right: 0; height: 2px; background-color: var(--time-indicator); z-index: 8; pointer-events: none; }
     .current-time-line::before { content: ''; position: absolute; left: -4px; top: -3px; width: 8px; height: 8px; background-color: var(--time-indicator); border-radius: 50%; }
 
-    /* Event Cards - Dark Overlay Removed */
+    /* Event Cards */
     .event-card { position: absolute; border-radius: 4px; overflow: hidden; font-size: 11px; padding: 4px 6px; cursor: pointer; border: 1px solid rgba(0,0,0,0.1); box-shadow: 0 2px 6px rgba(0,0,0,0.1); transition: transform 0.1s, box-shadow 0.1s; background-size: cover; background-position: center; color: var(--text-color); z-index: 2; }
     .event-card:hover { transform: scale(1.02); z-index: 7 !important; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
-    .event-content { position: relative; z-index: 2; height: 100%; display: flex; flex-direction: column; justify-content: space-between; word-break: break-word; color: inherit; }
-    .event-title { font-weight: 600; line-height: 1.2; }
-    .event-time { font-size: 9.5px; opacity: 0.85; margin-top: 2px; }
+    .event-content { position: relative; z-index: 2; height: 100%; display: flex; flex-direction: column; justify-content: flex-start; gap: 2px; word-break: break-word; color: inherit; overflow: hidden; }
+    .event-title { font-weight: 600; line-height: 1.2; font-size: 11px; }
+    .event-details { font-size: 9.5px; opacity: 0.88; line-height: 1.25; margin-top: 1px; }
+    .event-time { font-size: 9px; opacity: 0.75; margin-top: auto; }
 
     /* Modals */
     .modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.4); display: none; justify-content: center; align-items: center; z-index: 100; backdrop-filter: blur(4px); }
@@ -332,6 +341,18 @@
           <label>Title</label>
           <input type="text" id="title" required placeholder="Event Title">
         </div>
+
+        <!-- Location & Description Fields -->
+        <div class="form-group">
+          <label>Location</label>
+          <input type="text" id="location" placeholder="e.g. Room 204, Coffee Shop, Zoom">
+        </div>
+
+        <div class="form-group">
+          <label>Description</label>
+          <textarea id="description" rows="2" placeholder="Add details or notes..."></textarea>
+        </div>
+
         <div class="form-group">
           <label><input type="checkbox" id="isAllDay"> All-Day Event</label>
         </div>
@@ -841,11 +862,26 @@
             const content = document.createElement('div');
             content.className = 'event-content';
             
+            // Event Title
             const title = document.createElement('div');
             title.className = 'event-title';
             title.innerText = evt.title;
             content.appendChild(title);
 
+            // Location & Description Details
+            if (evt.location || evt.description) {
+              const details = document.createElement('div');
+              details.className = 'event-details';
+              
+              let detailText = [];
+              if (evt.location) detailText.push(`📍 ${evt.location}`);
+              if (evt.description) detailText.push(evt.description);
+
+              details.innerText = detailText.join(' • ');
+              content.appendChild(details);
+            }
+
+            // Time Display
             if (!evt.isAllDay && evt.startTime && evt.endTime) {
               const time = document.createElement('div');
               time.className = 'event-time';
@@ -880,6 +916,8 @@
     function openModal(data = {}) {
       document.getElementById('eventId').value = data.id || '';
       document.getElementById('title').value = data.title || '';
+      document.getElementById('location').value = data.location || '';
+      document.getElementById('description').value = data.description || '';
       document.getElementById('isAllDay').checked = !!data.isAllDay;
       document.getElementById('startDate').value = data.startDate || formatDate(currentDate);
       document.getElementById('startTime').value = data.startTime || '09:00';
@@ -917,6 +955,8 @@
       const evtData = {
         id,
         title: document.getElementById('title').value,
+        location: document.getElementById('location').value,
+        description: document.getElementById('description').value,
         isAllDay: document.getElementById('isAllDay').checked,
         startDate: document.getElementById('startDate').value,
         startTime: document.getElementById('startTime').value,
