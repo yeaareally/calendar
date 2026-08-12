@@ -19,12 +19,7 @@
       --bg-size: cover;
     }
 
-    * { 
-      box-sizing: border-box; 
-      margin: 0; 
-      padding: 0; 
-      font-family: var(--calendar-font); 
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: var(--calendar-font); }
     
     body { 
       background-color: var(--bg-color); 
@@ -42,7 +37,6 @@
       transition: background-color 0.3s ease;
     }
 
-    /* Header Controls */
     header { 
       display: flex; 
       justify-content: space-between; 
@@ -60,7 +54,6 @@
     .view-toggle { display: flex; background: rgba(0, 0, 0, 0.05); border-radius: 6px; padding: 2px; border: 1px solid var(--border-color); }
     .view-btn { border: none; background: transparent; padding: 4px 10px; font-size: 11px; border-radius: 4px; cursor: pointer; color: var(--text-color); transition: all 0.2s ease; }
     
-    /* Inverted Active View Toggle */
     .view-btn.active { 
       background-color: var(--text-color) !important; 
       color: #ffffff !important; 
@@ -82,26 +75,27 @@
     }
     button:hover { background: rgba(0, 0, 0, 0.1); border-color: rgba(0,0,0,0.2); }
     
-    /* Dynamic Primary Button (+ Event) */
     button.primary, #newEventBtn { 
       background-color: var(--text-color) !important; 
       border-color: var(--text-color) !important; 
       color: #ffffff !important; 
     }
-    button.primary:hover, #newEventBtn:hover { 
-      opacity: 0.88;
+
+    .current-range { font-weight: 600; font-size: 14px; color: var(--text-color); }
+
+    #settingsBtn { padding: 6px 10px; font-size: 14px; line-height: 1; }
+
+    #syncStatus {
+      font-size: 10px;
+      padding: 3px 8px;
+      border-radius: 12px;
+      background: rgba(0,0,0,0.06);
+      color: var(--text-color);
+      display: flex;
+      align-items: center;
+      gap: 4px;
     }
 
-    .current-range { font-weight: 600; font-size: 14px; text-shadow: none; color: var(--text-color); }
-
-    /* Icon Only Settings Button */
-    #settingsBtn {
-      padding: 6px 10px;
-      font-size: 14px;
-      line-height: 1;
-    }
-
-    /* Calendar Grid Container */
     .calendar-container { 
       flex: 1; 
       display: flex; 
@@ -113,22 +107,11 @@
       backdrop-filter: blur(4px);
     }
 
-    /* Sticky Day Header */
     .day-header { display: flex; border-bottom: 1px solid var(--border-color); background: rgba(255, 255, 255, 0.85); position: sticky; top: 0; z-index: 10; margin-left: 60px; backdrop-filter: blur(8px); }
     .day-column-header { flex: 1; text-align: center; padding: 8px 0; border-right: 1px solid var(--border-color); font-weight: 600; text-transform: uppercase; font-size: 11px; color: var(--text-color); opacity: 0.8; }
     
-    /* Dynamic Today Header Text & Badge Circle */
-    .day-column-header.today { 
-      color: var(--text-color) !important; 
-      opacity: 1 !important; 
-      font-weight: 700 !important;
-    }
-    .day-column-header .date-num { 
-      font-size: 16px; 
-      display: block; 
-      color: var(--text-color); 
-      margin-top: 2px; 
-    }
+    .day-column-header.today { color: var(--text-color) !important; opacity: 1 !important; font-weight: 700 !important; }
+    .day-column-header .date-num { font-size: 16px; display: block; color: var(--text-color); margin-top: 2px; }
     .day-column-header.today .date-num { 
       background-color: var(--text-color) !important; 
       color: #ffffff !important; 
@@ -140,21 +123,18 @@
       display: inline-block;
     }
 
-    /* All Day Banner Row */
     .all-day-row { display: flex; border-bottom: 2px solid var(--border-color); background: rgba(255, 255, 255, 0.6); min-height: 36px; margin-left: 60px; position: sticky; top: 49px; z-index: 9; }
     .all-day-cell { flex: 1; border-right: 1px solid var(--border-color); padding: 2px; min-height: 36px; display: flex; flex-direction: column; gap: 2px; }
 
-    /* Main Grid Body */
     .grid-body { display: flex; position: relative; flex: 1; min-height: 1440px; }
     .time-axis { width: 60px; flex-shrink: 0; border-right: 1px solid var(--border-color); background: rgba(255, 255, 255, 0.7); z-index: 5; }
-    .hour-label { height: var(--hour-height); text-align: right; padding-right: 8px; font-size: 10px; color: var(--text-color); opacity: 0.75; transform: translateY(-6px); text-shadow: none; }
+    .hour-label { height: var(--hour-height); text-align: right; padding-right: 8px; font-size: 10px; color: var(--text-color); opacity: 0.75; transform: translateY(-6px); }
     
     .days-grid { flex: 1; display: flex; position: relative; }
     .day-column { flex: 1; border-right: 1px solid var(--border-color); position: relative; height: 100%; cursor: crosshair; }
-    .hour-line { position: absolute; left: 0; right: 0; border-bottom: 1px solid var(--border-color); height: var(--hour-height); box-sizing: border-box; pointer-events: none; }
+    .hour-line { position: absolute; left: 0; right: 0; border-bottom: 1px solid var(--border-color); height: var(--hour-height); pointer-events: none; }
     .half-hour-line { position: absolute; left: 0; right: 0; border-bottom: 1px dashed rgba(0, 0, 0, 0.08); top: 30px; pointer-events: none; }
 
-    /* Drag Selection Box */
     .drag-selection-box {
       position: absolute;
       left: 2px;
@@ -167,19 +147,16 @@
       display: none;
     }
 
-    /* Current Time Tracker Line */
     .current-time-line { position: absolute; left: 0; right: 0; height: 2px; background-color: var(--time-indicator); z-index: 8; pointer-events: none; }
     .current-time-line::before { content: ''; position: absolute; left: -4px; top: -3px; width: 8px; height: 8px; background-color: var(--time-indicator); border-radius: 50%; }
 
-    /* Event Cards */
-    .event-card { position: absolute; border-radius: 4px; overflow: hidden; font-size: 11px; padding: 4px 6px; cursor: pointer; border: 1px solid rgba(0,0,0,0.1); box-shadow: 0 2px 6px rgba(0,0,0,0.1); transition: transform 0.1s, box-shadow 0.1s; background-size: cover; background-position: center; color: var(--text-color); z-index: 2; }
+    .event-card { position: absolute; border-radius: 4px; overflow: hidden; font-size: 11px; padding: 4px 6px; cursor: pointer; border: 1px solid rgba(0,0,0,0.1); box-shadow: 0 2px 6px rgba(0,0,0,0.1); background-size: cover; background-position: center; color: var(--text-color); z-index: 2; }
     .event-card:hover { transform: scale(1.02); z-index: 7 !important; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
     .event-content { position: relative; z-index: 2; height: 100%; display: flex; flex-direction: column; justify-content: flex-start; gap: 2px; word-break: break-word; color: inherit; overflow: hidden; }
     .event-title { font-weight: 600; line-height: 1.2; font-size: 11px; }
     .event-details { font-size: 9.5px; opacity: 0.88; line-height: 1.25; margin-top: 1px; }
     .event-time { font-size: 9px; opacity: 0.75; margin-top: auto; }
 
-    /* Modals */
     .modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.4); display: none; justify-content: center; align-items: center; z-index: 100; backdrop-filter: blur(4px); }
     .modal-backdrop.active { display: flex; }
     .modal { background: #ffffff; border: 1px solid var(--border-color); border-radius: 8px; width: 440px; max-width: 90%; padding: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); max-height: 90vh; overflow-y: auto; color: #1a1a1a; }
@@ -192,14 +169,12 @@
     .modal-actions { display: flex; justify-content: space-between; margin-top: 16px; }
     .slider-val { float: right; font-weight: bold; color: #1a1a1a; }
 
-    /* Repeat Day Selector Styling */
     .day-selector { display: flex; gap: 4px; margin-top: 4px; }
     .day-checkbox { flex: 1; text-align: center; }
     .day-checkbox input { display: none; }
     .day-checkbox span { display: block; padding: 6px 0; background: #f1f5f9; border: 1px solid var(--border-color); border-radius: 4px; font-size: 11px; cursor: pointer; font-weight: 600; color: #555555; }
     .day-checkbox input:checked + span { background: var(--text-color); color: white; border-color: var(--text-color); }
 
-    /* Image Preview Boxes */
     .preview-box {
       width: 100%;
       height: 100px;
@@ -244,6 +219,7 @@
         <button class="view-btn active" id="weekViewBtn">Week</button>
         <button class="view-btn" id="dayViewBtn">Day</button>
       </div>
+      <span id="syncStatus">☁️ Synced</span>
     </div>
     <div class="current-range" id="dateRangeDisplay">Aug 10 – Aug 16, 2026</div>
     <div style="display:flex; gap: 8px; align-items: center;">
@@ -266,7 +242,6 @@
     <div class="modal">
       <h3>Calendar Customization</h3>
       <form id="settingsForm">
-        
         <div class="form-row">
           <div class="form-group">
             <label>Font Family</label>
@@ -288,7 +263,6 @@
 
         <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 12px 0;">
 
-        <!-- Background Settings -->
         <div class="form-group">
           <label>Background Fill Type</label>
           <select id="bgType">
@@ -312,16 +286,13 @@
             <input type="file" id="calendarBgFile" accept="image/*">
           </div>
 
-          <!-- Live Background Image Preview -->
           <div class="preview-box" id="bgPreviewBox">
             <span class="preview-label">Live Preview</span>
             <span id="bgPreviewPlaceholder">No Image Selected</span>
           </div>
 
-          <!-- Image Crop & Position Controls -->
           <div style="background: #f8fafc; padding: 10px; border-radius: 6px; margin-bottom: 10px; border: 1px solid var(--border-color);">
             <div style="font-weight: 600; font-size: 11px; margin-bottom: 6px;">Image Crop & Position</div>
-            
             <div class="form-group">
               <label>Focal Position</label>
               <select id="bgFocalPoint">
@@ -339,12 +310,10 @@
                 <label>Horizontal Position (X) <span class="slider-val" id="posXVal">50%</span></label>
                 <input type="range" id="bgPosX" min="0" max="100" value="50">
               </div>
-
               <div class="form-group">
                 <label>Vertical Position (Y) <span class="slider-val" id="posYVal">50%</span></label>
                 <input type="range" id="bgPosY" min="0" max="100" value="50">
               </div>
-
               <div class="form-group">
                 <label>Zoom Level <span class="slider-val" id="zoomVal">100%</span></label>
                 <input type="range" id="bgZoom" min="100" max="300" value="100">
@@ -380,7 +349,6 @@
           <input type="text" id="title" required placeholder="Event Title">
         </div>
 
-        <!-- Location & Description Fields -->
         <div class="form-group">
           <label>Location</label>
           <input type="text" id="location" placeholder="e.g. Room 204, Coffee Shop, Zoom">
@@ -409,7 +377,6 @@
           </div>
         </div>
 
-        <!-- Recurrence Control -->
         <div style="background: #f8fafc; padding: 10px; border-radius: 6px; margin: 10px 0; border: 1px solid var(--border-color);">
           <div class="form-group" style="margin-bottom: 6px;">
             <label><input type="checkbox" id="isRecurring"> Repeat Event</label>
@@ -436,14 +403,12 @@
           </div>
         </div>
 
-        <!-- Event Image Settings & Live Preview -->
         <div class="form-group">
           <label>Event Image Background (URL or File)</label>
           <input type="text" id="imageUrl" placeholder="https://example.com/image.png" style="margin-bottom: 4px;">
           <input type="file" id="imageFile" accept="image/*">
         </div>
 
-        <!-- Live Event Image Preview -->
         <div class="preview-box" id="eventPreviewBox">
           <span class="preview-label">Card Live Preview</span>
           <span id="eventPreviewPlaceholder">No Event Image</span>
@@ -459,7 +424,6 @@
           </select>
         </div>
 
-        <!-- Event Color Settings (Card Color & Text Color) -->
         <div class="form-row">
           <div class="form-group">
             <label>Event Color</label>
@@ -482,20 +446,76 @@
     </div>
   </div>
 
-  <script>
-    // Storage Helper
-    const SafeStorage = {
-      getItem: (k) => { try { return localStorage.getItem(k); } catch(e) { return null; } },
-      setItem: (k, v) => { try { localStorage.setItem(k, v); } catch(e) {} }
+  <!-- Firebase Modular SDK Scripts -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+    // Your Exact calendar481 Firebase Configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyC-zeuG-ucBaAL-d3bUQbd49vAl1lP4YT0",
+      authDomain: "calendar481.firebaseapp.com",
+      databaseURL: "https://calendar481-default-rtdb.firebaseio.com",
+      projectId: "calendar481",
+      storageBucket: "calendar481.firebasestorage.app",
+      messagingSenderId: "598529363211",
+      appId: "1:598529363211:web:4fc12766a2f76daf5ca60e"
     };
 
-    // State
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const calendarDataRef = ref(db, 'user_calendar_data');
+
+    // App State
     let currentDate = new Date();
     let currentView = 'week';
-    let events = JSON.parse(SafeStorage.getItem('notion_calendar_events') || '[]');
-    let calendarSettings = JSON.parse(SafeStorage.getItem('notion_calendar_settings') || '{"fontPreset":"system","textColor":"#1a1a1a","type":"color","color":"#ffffff","url":"","opacity":65,"focalPoint":"center center","posX":50,"posY":50,"zoom":100}');
-    
-    // Drag state
+    let events = [];
+    let calendarSettings = {
+      fontPreset: "system",
+      textColor: "#1a1a1a",
+      type: "color",
+      color: "#ffffff",
+      url: "",
+      opacity: 65,
+      focalPoint: "center center",
+      posX: 50,
+      posY: 50,
+      zoom: 100
+    };
+
+    const syncStatus = document.getElementById('syncStatus');
+    function updateSyncBadge(status) {
+      if (status === 'syncing') {
+        syncStatus.innerHTML = '🔄 Syncing...';
+      } else if (status === 'synced') {
+        syncStatus.innerHTML = '☁️ Synced';
+      }
+    }
+
+    function saveToCloud() {
+      updateSyncBadge('syncing');
+      set(calendarDataRef, {
+        events: events,
+        settings: calendarSettings
+      }).then(() => {
+        updateSyncBadge('synced');
+      }).catch((err) => {
+        console.error('Firebase save error:', err);
+      });
+    }
+
+    onValue(calendarDataRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        if (data.events) events = data.events;
+        if (data.settings) calendarSettings = data.settings;
+        applyCalendarSettings();
+        render();
+        updateSyncBadge('synced');
+      }
+    });
+
     let isDragging = false;
     let dragStartY = 0;
     let dragTargetCol = null;
@@ -503,7 +523,6 @@
 
     const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
-    // DOM Elements
     const dayHeader = document.getElementById('dayHeader');
     const allDayRow = document.getElementById('allDayRow');
     const timeAxis = document.getElementById('timeAxis');
@@ -512,12 +531,10 @@
     const eventModal = document.getElementById('eventModal');
     const settingsModal = document.getElementById('settingsModal');
 
-    // Recurrence Checkbox UI Toggle
     document.getElementById('isRecurring').addEventListener('change', (e) => {
       document.getElementById('repeatOptionsGroup').style.display = e.target.checked ? 'block' : 'none';
     });
 
-    // Live Settings Preview Updater
     function updateSettingsPreview() {
       const url = document.getElementById('calendarBgUrl').value;
       const focal = document.getElementById('bgFocalPoint').value;
@@ -689,10 +706,9 @@
         posY: Number(document.getElementById('bgPosY').value),
         zoom: Number(document.getElementById('bgZoom').value)
       };
-      SafeStorage.setItem('notion_calendar_settings', JSON.stringify(calendarSettings));
       applyCalendarSettings();
+      saveToCloud();
       settingsModal.classList.remove('active');
-      render();
     });
 
     function initBaseGrid() {
@@ -825,7 +841,7 @@
       activeDragBox.style.height = `${snappedHeight}px`;
     });
 
-    window.addEventListener('mouseup', (e) => {
+    window.addEventListener('mouseup', () => {
       if (!isDragging || !dragTargetCol || !activeDragBox) return;
 
       const topY = parseInt(activeDragBox.style.top, 10) || dragStartY;
@@ -878,7 +894,6 @@
             card.className = 'event-card';
             card.style.backgroundColor = evt.bgColor || '#3b82f6';
             
-            // Custom text color per event
             if (evt.eventTextColor) {
               card.style.color = evt.eventTextColor;
             }
@@ -901,13 +916,11 @@
             const content = document.createElement('div');
             content.className = 'event-content';
             
-            // Event Title
             const title = document.createElement('div');
             title.className = 'event-title';
             title.innerText = evt.title;
             content.appendChild(title);
 
-            // Location & Description Details
             if (evt.location || evt.description) {
               const details = document.createElement('div');
               details.className = 'event-details';
@@ -920,7 +933,6 @@
               content.appendChild(details);
             }
 
-            // Time Display
             if (!evt.isAllDay && evt.startTime && evt.endTime) {
               const time = document.createElement('div');
               time.className = 'event-time';
@@ -1013,22 +1025,19 @@
       if (existingIdx >= 0) events[existingIdx] = evtData;
       else events.push(evtData);
 
-      SafeStorage.setItem('notion_calendar_events', JSON.stringify(events));
+      saveToCloud();
       eventModal.classList.remove('active');
-      render();
     });
 
     document.getElementById('deleteBtn').addEventListener('click', () => {
       const id = document.getElementById('eventId').value;
       if (id) {
         events = events.filter(x => x.id !== id);
-        SafeStorage.setItem('notion_calendar_events', JSON.stringify(events));
+        saveToCloud();
         eventModal.classList.remove('active');
-        render();
       }
     });
 
-    // View Navigation & Switching Controls
     document.getElementById('weekViewBtn').addEventListener('click', () => {
       currentView = 'week';
       document.getElementById('weekViewBtn').classList.add('active');
@@ -1061,8 +1070,6 @@
     document.getElementById('cancelBtn').addEventListener('click', () => eventModal.classList.remove('active'));
     document.getElementById('newEventBtn').addEventListener('click', () => openModal());
 
-    // Startup
-    applyCalendarSettings();
     initBaseGrid();
     render();
   </script>
